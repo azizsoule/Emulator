@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 class CPU<M, R> {
   final M memory;
@@ -9,7 +10,7 @@ class CPU<M, R> {
 
 class Chip8Register {
   // 16 8-bit registers
-  final List<int> v = List<int>.filled(16, 0);
+  final Uint8List v = Uint8List(16);
 
   // 16-bit register
   int i = 0;
@@ -32,8 +33,8 @@ class Chip8Register {
   final List<int> s = List<int>.empty(growable: true);
 }
 
-class Chip8 extends CPU<List<int>, Chip8Register> {
-  Chip8() : super(List<int>.filled(4096, 0), Chip8Register());
+class Chip8 extends CPU<Uint8List, Chip8Register> {
+  Chip8() : super(Uint8List(4096), Chip8Register());
 
   void loadProgram(List<int> program) {
     for (var i = 0; i < program.length; i++) {
@@ -117,24 +118,23 @@ class Chip8 extends CPU<List<int>, Chip8Register> {
           case 0x4:
             final int additionResult = registers.v[x] + registers.v[y];
             registers.v[0xF] = additionResult > 0xFF ? 0x1 : 0x0;
-            registers.v[x] = additionResult & 0x00FF;
+            registers.v[x] = additionResult;
             break;
           case 0x5:
             registers.v[0xF] = registers.v[x] > registers.v[y] ? 0x1 : 0x0;
             registers.v[x] = registers.v[x] - registers.v[y];
             break;
           case 0x6:
-            registers.v[0xF] = registers.v[x] & 00000001;
-            registers.v[x] = registers.v[x] ~/ 2;
+            registers.v[0xF] = registers.v[x] & 0x1;
+            registers.v[x] = registers.v[x] >> 1;
             break;
           case 0x7:
             registers.v[0xF] = registers.v[y] > registers.v[x] ? 0x1 : 0x0;
             registers.v[x] = registers.v[y] - registers.v[x];
             break;
           case 0xE:
-            registers.v[0xF] =
-                registers.v[x] & 10000000 == 10000000 ? 0x1 : 0x0;
-            registers.v[x] = registers.v[x] * 2;
+            registers.v[0xF] = registers.v[x] & 0x80;
+            registers.v[x] = registers.v[x] << 1;
             break;
         }
         break;
