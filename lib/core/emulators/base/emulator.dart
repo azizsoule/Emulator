@@ -34,17 +34,17 @@ abstract class Emulator<C, M, S extends EmulatorScreen, K extends EmulatorKeyboa
 
   int fetch();
 
-  void decode();
+  Object decode(int opcode);
 
-  void execute(int opcode);
+  void execute(Object object);
 
   void cycle() {
     final int opcode = fetch();
-    decode();
-    execute(opcode);
+    final Object object = decode(opcode);
+    execute(object);
   }
 
-  void onKeyPressed(EmulatorKey key);
+  void onKeyPressed(key) {}
 
-  void onKeyReleased(EmulatorKey key);
+  void onKeyReleased(key) {}
 }
