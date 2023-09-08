@@ -1,19 +1,20 @@
+import 'package:flutter/material.dart';
+
 import '../base/keyboard.dart';
 
-class Chip8KeyBoard implements EmulatorKeyboard {
+class Chip8KeyBoard extends EmulatorKeyboard {
+  const Chip8KeyBoard({
+    super.key,
+    required super.controller,
+  });
+
   @override
-  Map keyMap() {
-    // TODO: implement keyMap
+  Widget build(BuildContext context) {
+    // TODO: implement build
     throw UnimplementedError();
   }
 
   @override
-  void onKeyDown() {
-    // TODO: implement onKeyDown
-  }
-
-  @override
-  void onKeyUp() {
-    // TODO: implement onKeyUp
-  }
+  // TODO: implement keys
+  List<EmulatorKey> get keys => throw UnimplementedError();
 }

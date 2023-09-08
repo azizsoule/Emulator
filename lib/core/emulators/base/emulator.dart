@@ -1,24 +1,50 @@
 import 'package:emulator/core/emulators/base/keyboard.dart';
 import 'package:emulator/core/emulators/base/screen.dart';
+import 'package:flutter/material.dart';
 
-abstract class Emulator<C, M, S extends EmulatorScreen, K extends EmulatorKeyboard> {
+abstract class Emulator<C, M, S extends EmulatorScreen, K extends EmulatorKeyboard> extends StatelessWidget {
   final C cpu;
   final M memory;
   final S screen;
   final K keyboard;
 
-  Emulator(
-    this.cpu,
-    this.memory,
-    this.screen,
-    this.keyboard,
-  );
+  Emulator({
+    super.key,
+    required this.cpu,
+    required this.memory,
+    required this.screen,
+    required this.keyboard,
+  }) {
+    _listenKeyboard();
+  }
 
-  void loadRom(List<int> rom);
+  void _listenKeyboard() {
+    keyboard.controller.stream.listen(
+      (event) {
+        if (event.state.isPressed) {
+          onKeyPressed(event.key);
+        } else {
+          onKeyReleased(event.key);
+        }
+      },
+    );
+  }
+
+  void loadProgram(List<int> program);
 
   int fetch();
 
   void decode();
 
   void execute(int opcode);
+
+  void cycle() {
+    final int opcode = fetch();
+    decode();
+    execute(opcode);
+  }
+
+  void onKeyPressed(EmulatorKey key);
+
+  void onKeyReleased(EmulatorKey key);
 }

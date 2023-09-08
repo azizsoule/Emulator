@@ -1,19 +1,31 @@
+import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:emulator/core/emulators/base/emulator.dart';
+import 'package:emulator/core/emulators/base/keyboard.dart';
 import 'package:emulator/core/emulators/chip_8/screen.dart';
+import 'package:flutter/material.dart';
 
 import 'cpu.dart';
 import 'keyboard.dart';
 
 class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyBoard> {
-  Chip8Emulator() : super(Chip8CPU(), Uint8List(4096), Chip8Screen(), Chip8KeyBoard());
+  Chip8Emulator({
+    super.key,
+  }) : super(
+          cpu: Chip8CPU(),
+          memory: Uint8List(4096),
+          screen: const Chip8Screen(),
+          keyboard: Chip8KeyBoard(
+            controller: StreamController<EmulatorKeyboardEvent>(),
+          ),
+        );
 
   @override
-  void loadRom(List<int> rom) {
-    for (var i = 0; i < rom.length; i++) {
-      memory[cpu.pc + i] = rom[i];
+  void loadProgram(List<int> program) {
+    for (var i = 0; i < program.length; i++) {
+      memory[cpu.pc + i] = program[i];
     }
   }
 
@@ -142,5 +154,21 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
         print("Unknow instruction");
         break;
     }
+  }
+
+  @override
+  void onKeyPressed(EmulatorKey key) {
+    // TODO: implement onKeyPressed
+  }
+
+  @override
+  void onKeyReleased(EmulatorKey key) {
+    // TODO: implement onKeyReleased
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
   }
 }

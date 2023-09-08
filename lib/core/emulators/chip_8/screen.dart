@@ -1,3 +1,19 @@
+import 'package:flutter/material.dart';
+
 import '../base/screen.dart';
 
-class Chip8Screen implements EmulatorScreen {}
+class Chip8Screen extends EmulatorScreen {
+  const Chip8Screen({
+    super.key,
+  });
+
+  @override
+  State<StatefulWidget> createState() => Chip8ScreenController();
+}
+
+class Chip8ScreenController extends State<Chip8Screen> {
+  @override
+  Widget build(BuildContext context) {
+    throw UnimplementedError();
+  }
+}
