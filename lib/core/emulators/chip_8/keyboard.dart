@@ -9,11 +9,6 @@ class Chip8KeyBoard extends EmulatorKeyboard<Chip8Key> {
     required super.controller,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox.shrink();
-  }
-
   final Wrapper<Chip8Key> pressedKey = Wrapper();
 
   final Wrapper<Chip8Key> releasedKey = Wrapper();
@@ -34,6 +29,33 @@ class Chip8KeyBoard extends EmulatorKeyboard<Chip8Key> {
 
   @override
   List<Chip8Key> get keys => Chip8Key.values;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      padding: const EdgeInsets.symmetric(horizontal: 100),
+      crossAxisCount: 4,
+      shrinkWrap: true,
+      children: List.generate(
+        keys.length,
+        (index) {
+          final Chip8Key key = keys.elementAt(index);
+
+          return InkWell(
+            borderRadius: BorderRadius.circular(8),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(key.label),
+              ),
+            ),
+            onTapDown: (_) => onKeyDown(key),
+            onTapUp: (_) => onKeyUp(key),
+          );
+        },
+      ),
+    );
+  }
 }
 
 enum Chip8Key {

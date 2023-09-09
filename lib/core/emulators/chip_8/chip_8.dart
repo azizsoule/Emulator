@@ -218,8 +218,18 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("CHIP 8"),
+      ),
+      body: Column(
+        children: [
+          screen,
+          const Divider(),
+          keyboard,
+        ],
+      ),
+    );
   }
 }
 

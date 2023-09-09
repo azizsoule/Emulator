@@ -1,7 +1,7 @@
-import 'package:emulator/core/widgets/emulator_widget.dart';
 import 'package:flutter/material.dart';
 
-import 'chip8/pages/chip8_page.dart';
+import 'app/chip8/pages/chip8_page.dart';
+import 'core/widgets/emulator_item_widget.dart';
 
 void main() {
   runApp(const EmulatorApp());
@@ -34,7 +34,7 @@ class MainPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            EmulatorWidget(
+            EmulatorItemWidget(
               image: "assets/images/chip_8.png",
               onTap: () {
                 Navigator.of(context).push(

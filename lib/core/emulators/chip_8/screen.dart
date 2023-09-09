@@ -14,6 +14,10 @@ class Chip8Screen extends EmulatorScreen {
 class Chip8ScreenController extends State<Chip8Screen> {
   @override
   Widget build(BuildContext context) {
-    throw UnimplementedError();
+    return const SizedBox(
+      width: 64,
+      height: 32,
+      child: Placeholder(),
+    );
   }
 }

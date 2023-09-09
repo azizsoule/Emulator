@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class EmulatorWidget extends StatelessWidget {
+class EmulatorItemWidget extends StatelessWidget {
   final void Function() onTap;
   final String image;
 
-  const EmulatorWidget({
+  const EmulatorItemWidget({
     super.key,
     required this.onTap,
     required this.image,
