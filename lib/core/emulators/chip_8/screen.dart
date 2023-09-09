@@ -14,6 +14,8 @@ class SetPixelEvent extends EmulatorScreenEvent {
   });
 }
 
+class ClearScreenEvent extends EmulatorScreenEvent {}
+
 class Chip8Screen extends EmulatorScreen {
   Chip8Screen({
     super.key,
@@ -44,6 +46,10 @@ class Chip8Screen extends EmulatorScreen {
       ),
     );
   }
+
+  void clear() {
+    controller.add(ClearScreenEvent());
+  }
 }
 
 class Chip8ScreenState extends EmulatorScreenState {
@@ -61,9 +67,20 @@ class Chip8ScreenState extends EmulatorScreenState {
   @override
   screenEventsListener(EmulatorScreenEvent event) {
     super.screenEventsListener(event);
+
     if (event is SetPixelEvent) {
       setState(() {
         pixels[event.x][event.y] = event.value;
+      });
+    }
+
+    if (event is ClearScreenEvent) {
+      setState(() {
+        for (int i = 0; i < pixels.length; i++) {
+          for (int j = 0; j < pixels[i].length; j++) {
+            pixels[i][j] = 0;
+          }
+        }
       });
     }
   }

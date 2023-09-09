@@ -84,7 +84,7 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
       case 0x0000:
         switch (object.opcode) {
           case 0x00E0:
-            // TODO : Clear screen
+            screen.clear();
             break;
           case 0x00EE:
             cpu.pc = cpu.s.last;
@@ -177,7 +177,17 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
         cpu.v[object.x] = Random().nextInt(256) & object.byte;
         break;
       case 0xD000:
-        // About display
+        // To finish
+        for (int j = cpu.i; j <= object.n; j++) {
+          final int byte = memory[j];
+
+          for (int i = 0; i <= 8; j++) {
+            int x = cpu.v[object.x] + i;
+            int y = cpu.v[object.y] + j;
+
+            screen.turnOnPixel(x, y);
+          }
+        }
         break;
       case 0xE000:
         switch (object.n) {
