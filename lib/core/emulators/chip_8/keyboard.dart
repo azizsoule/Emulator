@@ -14,21 +14,21 @@ class Chip8KeyBoard extends EmulatorKeyboard<Chip8Key> {
     return const SizedBox.shrink();
   }
 
-  final DataWrapper<Chip8Key> pressedKey = DataWrapper();
+  final Wrapper<Chip8Key> pressedKey = Wrapper();
 
-  final DataWrapper<Chip8Key> releasedKey = DataWrapper();
+  final Wrapper<Chip8Key> releasedKey = Wrapper();
 
   @override
   void onKeyDown(Chip8Key key) {
-    pressedKey.data = key;
-    releasedKey.data = null;
+    pressedKey.content = key;
+    releasedKey.content = null;
     super.onKeyDown(key);
   }
 
   @override
   void onKeyUp(Chip8Key key) {
-    releasedKey.data = key;
-    pressedKey.data = null;
+    releasedKey.content = key;
+    pressedKey.content = null;
     super.onKeyUp(key);
   }
 

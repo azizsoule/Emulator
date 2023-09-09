@@ -1,3 +1,3 @@
-class DataWrapper<D> {
-  D? data;
+class Wrapper<D> {
+  D? content;
 }
