@@ -17,7 +17,7 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
   }) : super(
           cpu: Chip8CPU(),
           memory: Uint8List(4096),
-          screen: const Chip8Screen(),
+          screen: Chip8Screen(),
           keyboard: Chip8KeyBoard(
             controller: StreamController<EmulatorKeyboardEvent<Chip8Key>>(),
           ),

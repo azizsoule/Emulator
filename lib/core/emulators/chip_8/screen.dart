@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import '../base/screen.dart';
 
 class Chip8Screen extends EmulatorScreen {
-  const Chip8Screen({
+  Chip8Screen({
     super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => Chip8ScreenController();
+  EmulatorScreenState createState() => Chip8ScreenState();
 }
 
-class Chip8ScreenController extends State<Chip8Screen> {
+class Chip8ScreenState extends EmulatorScreenState {
   @override
   Widget build(BuildContext context) {
     return const SizedBox(
