@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:emulator/core/emulators/base/emulator.dart';
-import 'package:emulator/core/emulators/base/keyboard.dart';
 import 'package:emulator/core/emulators/chip_8/screen.dart';
 import 'package:flutter/material.dart';
 
@@ -17,13 +15,34 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
   }) : super(
           cpu: Chip8CPU(),
           memory: Uint8List(4096),
-          screen: Chip8Screen(),
-          keyboard: Chip8KeyBoard(
-            controller: StreamController<EmulatorKeyboardEvent<Chip8Key>>(),
-          ),
+          screen: Chip8Screen(scale: 5),
+          keyboard: Chip8KeyBoard(),
         );
 
-  void _loadSprites() {}
+  void _loadSprites() {
+    final List<int> sprites = [
+      0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+      0x20, 0x60, 0x20, 0x20, 0x70, // 1
+      0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+      0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+      0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+      0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+      0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+      0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+      0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+      0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+      0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+      0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+      0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+      0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+      0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+      0xF0, 0x80, 0xF0, 0x80, 0x80, // F
+    ];
+
+    for (int i = 0; i < sprites.length; i++) {
+      memory[i] = sprites[i];
+    }
+  }
 
   @override
   void loadProgram(List<int> program) {

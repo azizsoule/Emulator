@@ -6,7 +6,6 @@ import '../base/keyboard.dart';
 class Chip8KeyBoard extends EmulatorKeyboard<Chip8Key> {
   Chip8KeyBoard({
     super.key,
-    required super.controller,
   });
 
   final Wrapper<Chip8Key> pressedKey = Wrapper();

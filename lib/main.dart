@@ -1,3 +1,4 @@
+import 'package:emulator/core/utils/debug_print.dart';
 import 'package:flutter/material.dart';
 
 import 'app/chip8/pages/chip8_page.dart';
@@ -37,6 +38,7 @@ class MainPage extends StatelessWidget {
             EmulatorItemWidget(
               image: "assets/images/chip_8.png",
               onTap: () {
+                printDebug("Hello");
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => const Chip8Page(),

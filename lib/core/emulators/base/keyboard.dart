@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 
 abstract class EmulatorKeyboard<K> extends StatelessWidget {
-  final StreamController<EmulatorKeyboardEvent<K>> controller;
-
-  const EmulatorKeyboard({
+  EmulatorKeyboard({
     super.key,
-    required this.controller,
   });
+
+  final StreamController<EmulatorKeyboardEvent<K>> controller = StreamController<EmulatorKeyboardEvent<K>>();
 
   List<K> get keys;
 

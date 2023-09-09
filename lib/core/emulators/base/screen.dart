@@ -2,15 +2,26 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+abstract class EmulatorScreenEvent {}
+
+class UpdateEmulatorScreenEvent extends EmulatorScreenEvent {}
+
 abstract class EmulatorScreen extends StatefulWidget {
   EmulatorScreen({
     super.key,
+    required this.width,
+    required this.height,
+    this.scale = 1,
   });
+
+  final int width;
+  final int height;
+  final int scale;
 
   final StreamController<EmulatorScreenEvent> controller = StreamController();
 
   void update() {
-    controller.add(EmulatorScreenEvent.update);
+    controller.add(UpdateEmulatorScreenEvent());
   }
 
   @override
@@ -18,22 +29,15 @@ abstract class EmulatorScreen extends StatefulWidget {
 }
 
 abstract class EmulatorScreenState extends State<EmulatorScreen> {
-  void _listen() {
-    widget.controller.stream.listen((event) {
-      if (event == EmulatorScreenEvent.update) {
-        setState(() {});
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _listen();
+    widget.controller.stream.listen(screenEventsListener);
   }
-}
 
-enum EmulatorScreenEvent {
-  clear,
-  update;
+  void screenEventsListener(EmulatorScreenEvent event) {
+    if (event is UpdateEmulatorScreenEvent) {
+      setState(() {});
+    }
+  }
 }
