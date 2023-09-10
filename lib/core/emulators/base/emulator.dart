@@ -15,19 +15,15 @@ abstract class Emulator<C, M, S extends EmulatorScreen, K extends EmulatorKeyboa
     required this.screen,
     required this.keyboard,
   }) {
-    _listenKeyboard();
+    keyboard.controller.stream.listen(keyboardEventsListener);
   }
 
-  void _listenKeyboard() {
-    keyboard.controller.stream.listen(
-      (event) {
-        if (event.state.isPressed) {
-          onKeyPressed(event.key);
-        } else {
-          onKeyReleased(event.key);
-        }
-      },
-    );
+  void keyboardEventsListener(EmulatorKeyboardEvent event) {
+    if (event.state.isPressed) {
+      onKeyPressed(event.key);
+    } else {
+      onKeyReleased(event.key);
+    }
   }
 
   void loadProgram(List<int> program);
