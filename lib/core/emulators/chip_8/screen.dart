@@ -2,109 +2,79 @@ import 'package:flutter/material.dart';
 
 import '../base/screen.dart';
 
-class SetPixelEvent extends EmulatorScreenEvent {
-  final int x;
-  final int y;
-  final int value;
-
-  SetPixelEvent({
-    required this.x,
-    required this.y,
-    required this.value,
-  });
-}
-
-class ClearScreenEvent extends EmulatorScreenEvent {}
-
 class Chip8Screen extends EmulatorScreen {
+  late final List<List<int>> pixels;
+
   Chip8Screen({
     super.key,
     super.width = 64,
     super.height = 32,
     super.scale,
-  });
-
-  @override
-  EmulatorScreenState createState() => Chip8ScreenState();
-
-  void turnOnPixel(int x, int y) {
-    controller.add(
-      SetPixelEvent(
-        x: x,
-        y: y,
-        value: 1,
-      ),
+  }) {
+    pixels = List.generate(
+      width.toInt(),
+      (index) => List.filled(height.toInt(), 0),
     );
   }
 
-  void turnOffPixel(int x, int y) {
-    controller.add(
-      SetPixelEvent(
-        x: x,
-        y: y,
-        value: 0,
-      ),
-    );
+  @override
+  EmulatorScreenState createState() => _Chip8ScreenState();
+
+  bool updatePixel(int x, int y) {
+    if (x > width) {
+      x = x - width;
+    } else if (x < 0) {
+      x = x + width;
+    }
+
+    if (y > height) {
+      y = y - height;
+    } else if (y < 0) {
+      y = y + height;
+    }
+
+    update(() {
+      pixels[x][y] = pixels[x][y] ^ 1;
+    });
+
+    return pixels[x][y] == 0;
   }
 
   void clear() {
-    controller.add(ClearScreenEvent());
+    update(() {
+      for (int i = 0; i < pixels.length; i++) {
+        for (int j = 0; j < pixels[i].length; j++) {
+          pixels[i][j] = 0;
+        }
+      }
+    });
   }
 }
 
-class Chip8ScreenState extends EmulatorScreenState {
-  late final List<List<int>> pixels;
-
-  @override
-  void initState() {
-    super.initState();
-    pixels = List.generate(
-      widget.width.toInt(),
-      (index) => List.filled(widget.height.toInt(), 0),
-    );
-  }
-
-  @override
-  screenEventsListener(EmulatorScreenEvent event) {
-    super.screenEventsListener(event);
-
-    if (event is SetPixelEvent) {
-      setState(() {
-        pixels[event.x][event.y] = event.value;
-      });
-    }
-
-    if (event is ClearScreenEvent) {
-      setState(() {
-        for (int i = 0; i < pixels.length; i++) {
-          for (int j = 0; j < pixels[i].length; j++) {
-            pixels[i][j] = 0;
-          }
-        }
-      });
-    }
-  }
-
+class _Chip8ScreenState extends EmulatorScreenState<Chip8Screen> {
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(
-        (widget.width * widget.scale).toDouble(),
-        (widget.height * widget.scale).toDouble(),
-      ),
-      painter: Chip8ScreenPainter(
-        scale: widget.scale,
-        pixels: pixels,
+    return Container(
+      color: Colors.black,
+      child: CustomPaint(
+        size: Size(
+          widget.width * widget.scale,
+          widget.height * widget.scale,
+        ),
+        painter: _Chip8ScreenPainter(
+          scale: widget.scale,
+          pixels: widget.pixels,
+        ),
       ),
     );
   }
 }
 
-class Chip8ScreenPainter extends CustomPainter {
-  final int scale;
+class _Chip8ScreenPainter extends CustomPainter {
+  final double scale;
   final List<List<int>> pixels;
 
-  Chip8ScreenPainter({
+  _Chip8ScreenPainter({
     required this.scale,
     required this.pixels,
   });
@@ -112,21 +82,21 @@ class Chip8ScreenPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Paint pixelPainter = Paint()
-      ..color = Colors.black
+      ..color = Colors.transparent
       ..style = PaintingStyle.fill;
 
-    for (int x = 0; x < size.width / scale; x++) {
-      for (int y = 0; y < size.height / scale; y++) {
-        pixelPainter.color = pixels[x][y] == 1 ? Colors.green : Colors.black;
+    for (int x = 0; x < size.width ~/ scale; x++) {
+      for (int y = 0; y < size.height ~/ scale; y++) {
+        pixelPainter.color = pixels[x][y] == 1 ? Colors.green : Colors.transparent;
 
         final Rect pixel = Rect.fromPoints(
           Offset(
-            (x * scale).toDouble(),
-            (y * scale).toDouble(),
+            x * scale,
+            y * scale,
           ),
           Offset(
-            ((x + 1) * scale).toDouble(),
-            ((y + 1) * scale).toDouble(),
+            (x + 1) * scale,
+            (y + 1) * scale,
           ),
         );
 

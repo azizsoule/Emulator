@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 
 abstract class EmulatorScreenEvent {}
 
-class UpdateEmulatorScreenEvent extends EmulatorScreenEvent {}
+class UpdateEmulatorScreenEvent extends EmulatorScreenEvent {
+  final void Function()? callback;
+
+  UpdateEmulatorScreenEvent(this.callback);
+}
 
 abstract class EmulatorScreen extends StatefulWidget {
   EmulatorScreen({
@@ -20,15 +24,17 @@ abstract class EmulatorScreen extends StatefulWidget {
 
   final StreamController<EmulatorScreenEvent> controller = StreamController();
 
-  void update() {
-    controller.add(UpdateEmulatorScreenEvent());
+  void update([void Function()? callback]) {
+    controller.add(
+      UpdateEmulatorScreenEvent(callback),
+    );
   }
 
   @override
   EmulatorScreenState createState();
 }
 
-abstract class EmulatorScreenState extends State<EmulatorScreen> {
+abstract class EmulatorScreenState<SCREEN extends EmulatorScreen> extends State<SCREEN> {
   @override
   void initState() {
     super.initState();
@@ -37,7 +43,7 @@ abstract class EmulatorScreenState extends State<EmulatorScreen> {
 
   void screenEventListener(EmulatorScreenEvent event) {
     if (event is UpdateEmulatorScreenEvent) {
-      setState(() {});
+      setState(() => event.callback?.call());
     }
   }
 }
