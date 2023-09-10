@@ -16,7 +16,7 @@ abstract class EmulatorScreen extends StatefulWidget {
 
   final int width;
   final int height;
-  final int scale;
+  final double scale;
 
   final StreamController<EmulatorScreenEvent> controller = StreamController();
 
