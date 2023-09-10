@@ -177,15 +177,18 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
         cpu.v[object.x] = Random().nextInt(256) & object.byte;
         break;
       case 0xD000:
-        // To finish
-        for (int j = cpu.i; j <= object.n; j++) {
-          final int byte = memory[j];
+        for (int j = 0; j <= object.n; j++) {
+          int byte = memory[cpu.i + j];
 
-          for (int i = 0; i <= 8; j++) {
-            int x = cpu.v[object.x] + i;
-            int y = cpu.v[object.y] + j;
+          for (int i = 0; i <= 8; i++) {
+            if ((byte & 0x80) > 0) {
+              int x = cpu.v[object.x] + i;
+              int y = cpu.v[object.y] + j;
 
-            screen.turnOnPixel(x, y);
+              cpu.v[0xF] = screen.updatePixel(x, y) ? 1 : 0;
+            }
+
+            byte = byte << 1;
           }
         }
         break;
@@ -222,10 +225,12 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
             cpu.i = cpu.i + cpu.v[object.x];
             break;
           case 0x29:
-            // Sprite
+            cpu.i = cpu.v[object.x] * 5;
             break;
           case 0x33:
-            // Dont got it
+            memory[cpu.i] = cpu.v[object.x] ~/ 100;
+            memory[cpu.i + 1] = (cpu.v[object.x] % 100) ~/ 10;
+            memory[cpu.i + 2] = cpu.v[object.x] % 10;
             break;
           case 0x55:
             for (int i = 0; i <= object.x; i++) {
