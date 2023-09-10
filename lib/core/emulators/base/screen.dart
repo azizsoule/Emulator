@@ -32,10 +32,10 @@ abstract class EmulatorScreenState extends State<EmulatorScreen> {
   @override
   void initState() {
     super.initState();
-    widget.controller.stream.listen(screenEventsListener);
+    widget.controller.stream.listen(screenEventListener);
   }
 
-  void screenEventsListener(EmulatorScreenEvent event) {
+  void screenEventListener(EmulatorScreenEvent event) {
     if (event is UpdateEmulatorScreenEvent) {
       setState(() {});
     }
