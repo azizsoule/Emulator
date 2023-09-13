@@ -19,7 +19,9 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
           keyboard: Chip8KeyBoard(),
         );
 
-  void _loadSprites() {
+  @override
+  void loadProgram(List<int> program) {
+    // Load sprites
     final List<int> sprites = [
       0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
       0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -42,14 +44,17 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
     for (int i = 0; i < sprites.length; i++) {
       memory[i] = sprites[i];
     }
-  }
 
-  @override
-  void loadProgram(List<int> program) {
-    _loadSprites();
+    // Load program
     for (var i = 0; i < program.length; i++) {
       memory[cpu.pc + i] = program[i];
     }
+  }
+
+  @override
+  void cycle() {
+    super.cycle();
+    cpu.updateTimers();
   }
 
   @override
@@ -209,17 +214,17 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
       case 0xF000:
         switch (object.byte) {
           case 0x07:
-            cpu.v[object.x] = cpu.delay;
+            cpu.v[object.x] = cpu.dt;
             break;
           case 0x0A:
             while (keyboard.pressedKey.content == null) {}
             cpu.v[object.x] = keyboard.pressedKey.content?.code ?? cpu.v[object.x];
             break;
           case 0x15:
-            cpu.delay = cpu.v[object.x];
+            cpu.dt = cpu.v[object.x];
             break;
           case 0x18:
-            cpu.sound = cpu.v[object.x];
+            cpu.st = cpu.v[object.x];
             break;
           case 0x1E:
             cpu.i = cpu.i + cpu.v[object.x];
@@ -248,6 +253,21 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
         printDebug("Unknown instruction");
         break;
     }
+
+    cpu.pc = cpu.pc + 2;
+  }
+
+  @override
+  void reset() {
+    cpu.pc = 0x200;
+    cpu.sp = 0;
+    cpu.s.clear();
+    cpu.v.fillRange(0, cpu.v.length, 0);
+    cpu.i = 0;
+    cpu.dt = 0;
+    cpu.st = 0;
+    screen.clear();
+    memory.fillRange(0, memory.length, 0);
   }
 
   @override
@@ -257,10 +277,21 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
         title: const Text("CHIP 8"),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           screen,
-          const Divider(),
+          const SizedBox(
+            height: 16,
+          ),
           keyboard,
+          const SizedBox(
+            height: 16,
+          ),
+          TextButton(
+            onPressed: pickFile,
+            child: const Text("Charger une ROM"),
+          ),
         ],
       ),
     );
