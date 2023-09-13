@@ -106,5 +106,5 @@ class _Chip8ScreenPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => oldDelegate != this;
 }
