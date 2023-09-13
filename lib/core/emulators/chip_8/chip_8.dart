@@ -55,6 +55,10 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
   void cycle() {
     super.cycle();
     cpu.updateTimers();
+    Future.delayed(
+      const Duration(microseconds: 1000 ~/ 60),
+      cycle,
+    );
   }
 
   @override
