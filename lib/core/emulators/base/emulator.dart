@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:emulator/core/emulators/base/keyboard.dart';
 import 'package:emulator/core/emulators/base/screen.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 abstract class Emulator<C, M, S extends EmulatorScreen, K extends EmulatorKeyboard> extends StatelessWidget {
@@ -28,6 +31,18 @@ abstract class Emulator<C, M, S extends EmulatorScreen, K extends EmulatorKeyboa
 
   void loadProgram(List<int> program);
 
+  void pickFile() async {
+    final FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result?.files.isNotEmpty == true) {
+      final File file = File(result!.files.elementAt(0).path ?? "");
+
+      reset();
+      loadProgram(file.readAsBytesSync());
+      cycle();
+    }
+  }
+
   int fetch();
 
   Object decode(int opcode);
@@ -39,6 +54,8 @@ abstract class Emulator<C, M, S extends EmulatorScreen, K extends EmulatorKeyboa
     final Object object = decode(opcode);
     execute(object);
   }
+
+  void reset();
 
   void onKeyPressed(key) {}
 
