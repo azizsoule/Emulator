@@ -35,6 +35,7 @@ class Chip8KeyBoard extends EmulatorKeyboard<Chip8Key> {
       padding: const EdgeInsets.symmetric(horizontal: 100),
       crossAxisCount: 4,
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       children: List.generate(
         keys.length,
         (index) {
