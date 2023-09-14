@@ -21,16 +21,16 @@ class Chip8Screen extends EmulatorScreen {
   EmulatorScreenState createState() => _Chip8ScreenState();
 
   bool updatePixel(int x, int y) {
-    if (x > width) {
-      x = x - width;
+    if (x >= width) {
+      x = 0;
     } else if (x < 0) {
-      x = x + width;
+      x = width - 1;
     }
 
-    if (y > height) {
-      y = y - height;
+    if (y >= height) {
+      y = 0;
     } else if (y < 0) {
-      y = y + height;
+      y = height - 1;
     }
 
     update(() {
