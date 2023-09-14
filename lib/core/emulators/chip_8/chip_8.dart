@@ -109,8 +109,8 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
         cpu.pc = object.addr;
         break;
       case 0x2000:
-        cpu.sp = cpu.sp + 1;
         cpu.s.add(cpu.pc);
+        cpu.sp = cpu.sp + 1;
         cpu.pc = object.addr;
         break;
       case 0x3000:
@@ -150,11 +150,11 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
             break;
           case 0x4:
             final int additionResult = cpu.v[object.x] + cpu.v[object.y];
-            cpu.v[0xF] = additionResult > 0xFF ? 0x1 : 0x0;
+            cpu.v[0xF] = additionResult > 0xFF ? 1 : 0;
             cpu.v[object.x] = additionResult;
             break;
           case 0x5:
-            cpu.v[0xF] = cpu.v[object.x] > cpu.v[object.y] ? 0x1 : 0x0;
+            cpu.v[0xF] = cpu.v[object.x] > cpu.v[object.y] ? 1 : 0;
             cpu.v[object.x] = cpu.v[object.x] - cpu.v[object.y];
             break;
           case 0x6:
@@ -162,7 +162,7 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
             cpu.v[object.x] = cpu.v[object.x] >> 1;
             break;
           case 0x7:
-            cpu.v[0xF] = cpu.v[object.y] > cpu.v[object.x] ? 0x1 : 0x0;
+            cpu.v[0xF] = cpu.v[object.y] > cpu.v[object.x] ? 1 : 0;
             cpu.v[object.x] = cpu.v[object.y] - cpu.v[object.x];
             break;
           case 0xE:
@@ -203,12 +203,12 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
         break;
       case 0xE000:
         switch (object.n) {
-          case 0xE:
+          case 0x9E:
             if (keyboard.pressedKey.content?.code == cpu.v[object.x]) {
               cpu.pc = cpu.pc + 2;
             }
             break;
-          case 0x1:
+          case 0xA1:
             if (keyboard.releasedKey.content?.code == cpu.v[object.x]) {
               cpu.pc = cpu.pc + 2;
             }
