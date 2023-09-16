@@ -20,6 +20,9 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
         );
 
   @override
+  int get cyclesPerSecond => 39;
+
+  @override
   void loadProgram(List<int> program) {
     // Load sprites
     final List<int> sprites = [
@@ -49,16 +52,6 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
     for (var i = 0; i < program.length; i++) {
       memory[cpu.pc + i] = program[i];
     }
-  }
-
-  @override
-  void cycle() {
-    super.cycle();
-    cpu.updateTimers();
-    Future.delayed(
-      const Duration(microseconds: 1000 ~/ 60),
-      cycle,
-    );
   }
 
   @override
@@ -258,6 +251,7 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
         break;
     }
 
+    cpu.updateTimers();
     cpu.pc = cpu.pc + 2;
   }
 

@@ -21,6 +21,8 @@ abstract class Emulator<C, M, S extends EmulatorScreen, K extends EmulatorKeyboa
     keyboard.controller.stream.listen(keyboardEventListener);
   }
 
+  int get cyclesPerSecond;
+
   void keyboardEventListener(EmulatorKeyboardEvent event) {
     if (event.state.isPressed) {
       onKeyPressed(event.key);
@@ -53,6 +55,11 @@ abstract class Emulator<C, M, S extends EmulatorScreen, K extends EmulatorKeyboa
     final int opcode = fetch();
     final Object object = decode(opcode);
     execute(object);
+
+    Future.delayed(
+      Duration(milliseconds: 1000 ~/ cyclesPerSecond),
+      cycle,
+    );
   }
 
   void reset();
