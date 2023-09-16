@@ -85,8 +85,8 @@ class _Chip8ScreenPainter extends CustomPainter {
       ..color = Colors.transparent
       ..style = PaintingStyle.fill;
 
-    for (int x = 0; x < size.width ~/ scale; x++) {
-      for (int y = 0; y < size.height ~/ scale; y++) {
+    for (int x = 0; x < (size.width ~/ scale); x++) {
+      for (int y = 0; y < (size.height ~/ scale); y++) {
         pixelPainter.color = pixels[x][y] == 1 ? Colors.green : Colors.transparent;
 
         final Rect pixel = Rect.fromPoints(
