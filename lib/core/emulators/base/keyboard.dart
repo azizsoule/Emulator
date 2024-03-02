@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 
-abstract class EmulatorKeyboard<K> extends StatelessWidget {
+abstract class EmulatorKeyboard<KEY> extends StatelessWidget {
   EmulatorKeyboard({
     super.key,
   });
 
-  final StreamController<EmulatorKeyboardEvent<K>> controller = StreamController<EmulatorKeyboardEvent<K>>();
+  final StreamController<EmulatorKeyboardEvent<KEY>> controller = StreamController<EmulatorKeyboardEvent<KEY>>();
 
-  List<K> get keys;
+  List<KEY> get keys;
 
-  void onKeyDown(K key) {
+  void onKeyDown(KEY key) {
     controller.add(
       EmulatorKeyboardEvent(
         state: EmulatorKeyState.pressed,
@@ -20,7 +20,7 @@ abstract class EmulatorKeyboard<K> extends StatelessWidget {
     );
   }
 
-  void onKeyUp(K key) {
+  void onKeyUp(KEY key) {
     controller.add(
       EmulatorKeyboardEvent(
         state: EmulatorKeyState.released,
@@ -39,9 +39,9 @@ enum EmulatorKeyState {
   bool get isReleased => this == EmulatorKeyState.released;
 }
 
-class EmulatorKeyboardEvent<K> {
+class EmulatorKeyboardEvent<KEY> {
   final EmulatorKeyState state;
-  final K key;
+  final KEY key;
 
   EmulatorKeyboardEvent({
     required this.state,

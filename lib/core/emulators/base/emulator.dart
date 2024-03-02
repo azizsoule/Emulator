@@ -5,11 +5,11 @@ import 'package:emulator/core/emulators/base/screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-abstract class Emulator<C, M, S extends EmulatorScreen, K extends EmulatorKeyboard> extends StatelessWidget {
-  final C cpu;
-  final M memory;
-  final S screen;
-  final K keyboard;
+abstract class Emulator<CPU, MEM, SCREEN extends EmulatorScreen, KEYBOARD extends EmulatorKeyboard> extends StatelessWidget {
+  final CPU cpu;
+  final MEM memory;
+  final SCREEN screen;
+  final KEYBOARD keyboard;
 
   Emulator({
     super.key,
