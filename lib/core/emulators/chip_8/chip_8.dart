@@ -44,6 +44,8 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
       0xF0, 0x80, 0xF0, 0x80, 0x80, // F
     ];
 
+    memory.fillRange(0, memory.length, 0);
+
     for (int i = 0; i < sprites.length; i++) {
       memory[i] = sprites[i];
     }
