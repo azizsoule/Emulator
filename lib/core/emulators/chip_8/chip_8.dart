@@ -59,6 +59,7 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
   @override
   int fetch() {
     final int opcode = (memory[cpu.pc] << 8) | memory[cpu.pc + 1];
+    cpu.pc = cpu.pc + 2;
     return opcode;
   }
 
@@ -144,25 +145,29 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
             cpu.v[object.x] = cpu.v[object.x] ^ cpu.v[object.y];
             break;
           case 0x4:
-            final int additionResult = cpu.v[object.x] + cpu.v[object.y];
+            final additionResult = cpu.v[object.x] + cpu.v[object.y];
+            cpu.v[object.x] = additionResult & 0xFF;
             cpu.v[0xF] = additionResult > 0xFF ? 1 : 0;
-            cpu.v[object.x] = additionResult;
             break;
           case 0x5:
-            cpu.v[0xF] = cpu.v[object.x] > cpu.v[object.y] ? 1 : 0;
-            cpu.v[object.x] = cpu.v[object.x] - cpu.v[object.y];
+            final subsTractionResult = cpu.v[object.x] - cpu.v[object.y];
+            cpu.v[object.x] = subsTractionResult & 0xFF;
+            cpu.v[0xF] = subsTractionResult >= 0 ? 1 : 0;
             break;
           case 0x6:
-            cpu.v[0xF] = cpu.v[object.x] & 0x1;
+            final vxLastBit = cpu.v[object.x] & 0x1;
             cpu.v[object.x] = cpu.v[object.x] >> 1;
+            cpu.v[0xF] = vxLastBit;
             break;
           case 0x7:
-            cpu.v[0xF] = cpu.v[object.y] > cpu.v[object.x] ? 1 : 0;
-            cpu.v[object.x] = cpu.v[object.y] - cpu.v[object.x];
+            final subsTractionResult = cpu.v[object.y] - cpu.v[object.x];
+            cpu.v[object.x] = subsTractionResult & 0xFF;
+            cpu.v[0xF] = subsTractionResult >= 0 ? 1 : 0;
             break;
           case 0xE:
-            cpu.v[0xF] = cpu.v[object.x] & 0x80;
-            cpu.v[object.x] = cpu.v[object.x] << 1;
+            final vxFirstBit = (cpu.v[object.x] & 0x80) >> 7;
+            cpu.v[object.x] = (cpu.v[object.x] << 1) & 0xFF;
+            cpu.v[0xF] = vxFirstBit;
             break;
         }
         break;
@@ -254,7 +259,6 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
     }
 
     cpu.updateTimers();
-    cpu.pc = cpu.pc + 2;
   }
 
   @override
