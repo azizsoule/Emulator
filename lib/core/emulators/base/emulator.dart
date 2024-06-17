@@ -18,12 +18,12 @@ abstract class Emulator<CPU, MEM, SCREEN extends EmulatorScreen, KEYBOARD extend
     required this.screen,
     required this.keyboard,
   }) {
-    keyboard.controller.stream.listen(keyboardEventListener);
+    keyboard.controller.stream.listen(_keyboardEventListener);
   }
 
   int get cyclesPerSecond;
 
-  void keyboardEventListener(EmulatorKeyboardEvent event) {
+  void _keyboardEventListener(EmulatorKeyboardEvent event) {
     if (event.state.isPressed) {
       onKeyPressed(event.key);
     } else {

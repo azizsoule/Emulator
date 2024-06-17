@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:emulator/core/emulators/base/emulator.dart';
 import 'package:emulator/core/emulators/chip_8/screen.dart';
 import 'package:emulator/core/utils/debug_print.dart';
+import 'package:emulator/core/utils/wrapper.dart';
 import 'package:flutter/material.dart';
 
 import 'cpu.dart';
@@ -18,6 +19,8 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
           screen: Chip8Screen(scale: 5),
           keyboard: Chip8KeyBoard(),
         );
+
+  static final Wrapper<Chip8Instruction> currentInstruction = Wrapper();
 
   @override
   int get cyclesPerSecond => 39;
@@ -84,6 +87,8 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
   @override
   void execute(Object object) {
     object as Chip8Instruction;
+
+    currentInstruction.content = object;
 
     switch (object.opcode & 0xF000) {
       case 0x0000:
@@ -202,7 +207,7 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
         }
         break;
       case 0xE000:
-        switch (object.n) {
+        switch (object.byte) {
           case 0x9E:
             if (keyboard.pressedKey.content?.code == cpu.v[object.x]) {
               cpu.pc = cpu.pc + 2;
@@ -272,6 +277,22 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
     cpu.st = 0;
     screen.clear();
     memory.fillRange(0, memory.length, 0);
+  }
+
+  @override
+  void onKeyPressed(key) {
+    key as Chip8Key;
+    if (currentInstruction.isNotEmpty) {
+      cpu.v[currentInstruction.content!.x] = key.code;
+    }
+  }
+
+  @override
+  void onKeyReleased(key) {
+    key as Chip8Key;
+    if (currentInstruction.isNotEmpty) {
+      cpu.v[currentInstruction.content!.x] = key.code;
+    }
   }
 
   @override
