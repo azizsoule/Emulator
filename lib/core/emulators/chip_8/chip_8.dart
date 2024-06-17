@@ -181,10 +181,10 @@ class Chip8Emulator extends Emulator<Chip8CPU, Uint8List, Chip8Screen, Chip8KeyB
         cpu.v[object.x] = Random().nextInt(256) & object.byte;
         break;
       case 0xD000:
-        for (int j = 0; j <= object.n; j++) {
+        for (int j = 0; j < object.n; j++) {
           int byte = memory[cpu.i + j];
 
-          for (int i = 0; i <= 8; i++) {
+          for (int i = 0; i < 8; i++) {
             if ((byte & 0x80) > 0) {
               int x = cpu.v[object.x] + i;
               int y = cpu.v[object.y] + j;
