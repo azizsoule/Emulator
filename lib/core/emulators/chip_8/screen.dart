@@ -79,15 +79,19 @@ class _Chip8ScreenPainter extends CustomPainter {
     required this.pixels,
   });
 
+  Color get _blankColor => const Color(0xFF9A6600);
+
+  Color get _drawColor => const Color(0xFFFFCC01);
+
   @override
   void paint(Canvas canvas, Size size) {
     final Paint pixelPainter = Paint()
-      ..color = Colors.transparent
+      ..color = _blankColor
       ..style = PaintingStyle.fill;
 
     for (int x = 0; x < (size.width ~/ scale); x++) {
       for (int y = 0; y < (size.height ~/ scale); y++) {
-        pixelPainter.color = pixels[x][y] == 1 ? Colors.green : Colors.transparent;
+        pixelPainter.color = pixels[x][y] == 1 ? _drawColor : _blankColor;
 
         final Rect pixel = Rect.fromPoints(
           Offset(
