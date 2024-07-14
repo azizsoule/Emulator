@@ -1,4 +1,4 @@
-import 'package:emulator/core/emulators/chip_8/chip_8.dart';
+import 'package:emulator/core/emulators/v1/chip_8/chip_8.dart';
 import 'package:flutter/material.dart';
 
 class Chip8Page extends StatelessWidget {

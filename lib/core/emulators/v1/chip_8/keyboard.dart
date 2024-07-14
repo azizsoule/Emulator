@@ -1,7 +1,6 @@
+import 'package:emulator/core/emulators/v1/base/keyboard.dart';
+import 'package:emulator/core/utils/wrapper.dart';
 import 'package:flutter/material.dart';
-
-import '../../utils/wrapper.dart';
-import '../base/keyboard.dart';
 
 class Chip8KeyBoard extends EmulatorKeyboard<Chip8Key> {
   Chip8KeyBoard({

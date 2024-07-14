@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:emulator/core/emulators/base/emulator.dart';
-import 'package:emulator/core/emulators/chip_8/screen.dart';
+import 'package:emulator/core/emulators/v1/base/emulator.dart';
+import 'package:emulator/core/emulators/v1/chip_8/screen.dart';
 import 'package:emulator/core/utils/debug_print.dart';
 import 'package:emulator/core/utils/wrapper.dart';
 import 'package:flutter/material.dart';

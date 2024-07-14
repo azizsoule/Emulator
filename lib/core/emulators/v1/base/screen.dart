@@ -46,4 +46,10 @@ abstract class EmulatorScreenState<SCREEN extends EmulatorScreen> extends State<
       setState(() => event.callback?.call());
     }
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.controller.close();
+  }
 }

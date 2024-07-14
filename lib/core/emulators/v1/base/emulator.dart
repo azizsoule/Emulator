@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:emulator/core/emulators/base/keyboard.dart';
-import 'package:emulator/core/emulators/base/screen.dart';
+import 'package:emulator/core/emulators/v1/base/keyboard.dart';
+import 'package:emulator/core/emulators/v1/base/screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
