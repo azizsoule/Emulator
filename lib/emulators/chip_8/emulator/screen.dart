@@ -1,6 +1,9 @@
+import 'package:emulator/core/base/messages/cpu_output_messages.dart';
+import 'package:emulator/core/base/screen.dart';
+import 'package:emulator/core/utils/debug_print.dart';
+import 'package:emulator/emulators/chip_8/emulator/messages/cpu_output_messsages.dart';
+import 'package:emulator/emulators/chip_8/emulator/shared_memory.dart';
 import 'package:flutter/material.dart';
-
-import '../base/screen.dart';
 
 class Chip8Screen extends EmulatorScreen {
   late final List<List<int>> pixels;
@@ -19,36 +22,6 @@ class Chip8Screen extends EmulatorScreen {
 
   @override
   EmulatorScreenState createState() => _Chip8ScreenState();
-
-  bool updatePixel(int x, int y) {
-    if (x >= width) {
-      x = 0;
-    } else if (x < 0) {
-      x = width - 1;
-    }
-
-    if (y >= height) {
-      y = 0;
-    } else if (y < 0) {
-      y = height - 1;
-    }
-
-    update(() {
-      pixels[x][y] = pixels[x][y] ^ 1;
-    });
-
-    return pixels[x][y] == 0;
-  }
-
-  void clear() {
-    update(() {
-      for (int i = 0; i < pixels.length; i++) {
-        for (int j = 0; j < pixels[i].length; j++) {
-          pixels[i][j] = 0;
-        }
-      }
-    });
-  }
 }
 
 class _Chip8ScreenState extends EmulatorScreenState<Chip8Screen> {
@@ -67,6 +40,51 @@ class _Chip8ScreenState extends EmulatorScreenState<Chip8Screen> {
         ),
       ),
     );
+  }
+
+  @override
+  void onMessage(CPUOutputMessage message) {
+    switch (message) {
+      case ClearScreenMessage _:
+        _clearScreen();
+      case UpdatePixelMessage updatePixelMessage:
+        _updatePixel(updatePixelMessage);
+      default:
+        printDebug("Unknown message");
+    }
+  }
+
+  void _clearScreen() {
+    setState(() {
+      for (int i = 0; i < widget.pixels.length; i++) {
+        for (int j = 0; j < widget.pixels[i].length; j++) {
+          widget.pixels[i][j] = 0;
+        }
+      }
+    });
+  }
+
+  void _updatePixel(UpdatePixelMessage updatePixelMessage) {
+    int x = updatePixelMessage.x;
+    int y = updatePixelMessage.y;
+
+    setState(() {
+      if (x >= widget.width) {
+        x = 0;
+      } else if (x < 0) {
+        x = widget.width - 1;
+      }
+
+      if (y >= widget.height) {
+        y = 0;
+      } else if (y < 0) {
+        y = widget.height - 1;
+      }
+
+      widget.pixels[x][y] = widget.pixels[x][y] ^ 1;
+    });
+
+    Chip8SharedMemory.updatePixelResponse = widget.pixels[x][y] == 0;
   }
 }
 

@@ -1,61 +1,6 @@
-import 'package:emulator/core/emulators/v1/base/keyboard.dart';
-import 'package:emulator/core/utils/wrapper.dart';
+import 'package:emulator/core/base/keyboard.dart';
+import 'package:emulator/emulators/chip_8/emulator/shared_memory.dart';
 import 'package:flutter/material.dart';
-
-class Chip8KeyBoard extends EmulatorKeyboard<Chip8Key> {
-  Chip8KeyBoard({
-    super.key,
-  });
-
-  final Wrapper<Chip8Key> pressedKey = Wrapper();
-
-  final Wrapper<Chip8Key> releasedKey = Wrapper();
-
-  @override
-  void onKeyDown(Chip8Key key) {
-    pressedKey.content = key;
-    releasedKey.content = null;
-    super.onKeyDown(key);
-  }
-
-  @override
-  void onKeyUp(Chip8Key key) {
-    releasedKey.content = key;
-    pressedKey.content = null;
-    super.onKeyUp(key);
-  }
-
-  @override
-  List<Chip8Key> get keys => Chip8Key.values;
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      padding: const EdgeInsets.symmetric(horizontal: 100),
-      crossAxisCount: 4,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      children: List.generate(
-        keys.length,
-        (index) {
-          final Chip8Key key = keys.elementAt(index);
-
-          return InkWell(
-            borderRadius: BorderRadius.circular(8),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(key.label),
-              ),
-            ),
-            onTapDown: (_) => onKeyDown(key),
-            onTapUp: (_) => onKeyUp(key),
-          );
-        },
-      ),
-    );
-  }
-}
 
 enum Chip8Key {
   one._(0x1, "1"),
@@ -79,4 +24,54 @@ enum Chip8Key {
   final String label;
 
   const Chip8Key._(this.code, this.label);
+}
+
+class Chip8KeyBoard extends EmulatorKeyboard<Chip8Key> {
+  Chip8KeyBoard({
+    super.key,
+  });
+
+  @override
+  List<Chip8Key> get keys => Chip8Key.values;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      padding: const EdgeInsets.symmetric(horizontal: 100),
+      crossAxisCount: 4,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      children: List.generate(
+        keys.length,
+        (index) {
+          final Chip8Key key = keys.elementAt(index);
+          return InkWell(
+            borderRadius: BorderRadius.circular(8),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(key.label),
+              ),
+            ),
+            onTapDown: (_) => onKeyDown(key),
+            onTapUp: (_) => onKeyUp(key),
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  void onKeyDown(Chip8Key key) {
+    Chip8SharedMemory.pressedKey = key;
+    Chip8SharedMemory.releasedKey = null;
+    super.onKeyDown(key);
+  }
+
+  @override
+  void onKeyUp(Chip8Key key) {
+    Chip8SharedMemory.releasedKey = key;
+    Chip8SharedMemory.pressedKey = null;
+    super.onKeyUp(key);
+  }
 }

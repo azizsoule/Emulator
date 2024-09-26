@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'app/chip8/pages/chip8_page.dart';
 import 'core/widgets/emulator_item_widget.dart';
+import 'emulators/chip_8/pages/chip8_page.dart';
 
 void main() {
   runApp(const EmulatorApp());
