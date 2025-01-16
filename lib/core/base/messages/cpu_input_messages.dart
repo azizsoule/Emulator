@@ -19,3 +19,11 @@ class KeyboardMessage<KEY> extends CPUInputMessage {
     required this.state,
   });
 }
+
+class UpdatePixelResponseMessage extends CPUInputMessage {
+  final bool response;
+
+  UpdatePixelResponseMessage({
+    required this.response,
+  });
+}

@@ -3,14 +3,27 @@ import 'package:emulator/core/base/messages/cpu_input_messages.dart';
 import 'package:emulator/core/base/messages/cpu_output_messages.dart';
 import 'package:flutter/cupertino.dart';
 
+enum CPUState {
+  running,
+  paused,
+  stopped;
+
+  bool get isRunning => this == CPUState.running;
+  bool get isPaused => this == CPUState.paused;
+  bool get isStopped => this == CPUState.stopped;
+}
+
 /// Emulator CPU representation
 abstract class EmulatorCPU<Instruction, Memory> with comms.Sender<CPUOutputMessage>, comms.Listener<CPUInputMessage> {
   @protected
   final Memory memory;
 
+  @protected
+  CPUState _state;
+
   EmulatorCPU({
     required this.memory,
-  }) {
+  }) : _state = CPUState.running {
     listen();
   }
 
@@ -34,6 +47,7 @@ abstract class EmulatorCPU<Instruction, Memory> with comms.Sender<CPUOutputMessa
 
   /// One CPU cycle
   void cycle() {
+    if (_state.isPaused) return;
     final instruction = fetch();
     execute(instruction);
     Future.delayed(
@@ -42,5 +56,14 @@ abstract class EmulatorCPU<Instruction, Memory> with comms.Sender<CPUOutputMessa
     );
   }
 
-  void pause() {}
+  void run() {
+    _state = CPUState.running;
+  }
+
+  void pause() {
+    _state = CPUState.paused;
+  }
+
+  @override
+  void onMessage(CPUInputMessage message) {}
 }

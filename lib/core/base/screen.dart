@@ -22,4 +22,7 @@ abstract class EmulatorScreenState<SCREEN extends EmulatorScreen> extends State<
   EmulatorScreenState() {
     listen();
   }
+
+  @override
+  void onMessage(CPUOutputMessage message) {}
 }
