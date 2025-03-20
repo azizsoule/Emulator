@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'core/widgets/emulator_item_widget.dart';
-import 'emulators/chip_8/pages/chip8_page.dart';
+import 'emulators/chip8/screens/emulator_screen.dart';
 
 void main() {
   runApp(const EmulatorApp());
@@ -12,41 +11,14 @@ class EmulatorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Emulator',
-      home: MainPage(),
-    );
-  }
-}
-
-class MainPage extends StatelessWidget {
-  const MainPage({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Emulators"),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Retro Emulator',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        brightness: Brightness.dark,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            EmulatorItemWidget(
-              image: "assets/images/chip_8.png",
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const Chip8Page(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      home: const EmulatorScreen(),
     );
   }
 }
